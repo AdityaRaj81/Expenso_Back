@@ -1,24 +1,11 @@
-# Use OpenJDK 17 base image
-FROM openjdk:17-jdk-alpine
-
-# Set working directory inside container
+# Use a multi-stage build to compile and run the app
+FROM maven:3.9.5-eclipse-temurin-17-alpine AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy your Spring Boot jar to the container
-COPY target/expenso-backend-0.0.1-SNAPSHOT.jar app.jar
-
-# # Start the application
-# ENTRYPOINT ["java", "-jar", "app.jar"]
-
-
-
-
-
-# # Copy the built JAR file
-# COPY target/*.jar app.jar
-
-# Expose port 8080
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/target/expense-tracker-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Run the JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
