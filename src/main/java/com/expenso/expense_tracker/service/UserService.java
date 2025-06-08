@@ -35,5 +35,4 @@ public class UserService {
 
         return "Login successful!";
     }
-
 }
