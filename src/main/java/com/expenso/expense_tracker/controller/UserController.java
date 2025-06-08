@@ -27,9 +27,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        String response = String.valueOf(userService.loginUser(loginDTO));
-        return ResponseEntity.ok(response); // Ensure loginUser() returns String
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+        String result = userService.loginUser(loginDTO);
 
+        switch (result) {
+            case "user_not_found":
+                return ResponseEntity.status(404).body("User not found with this email.");
+            case "password_wrong":
+                return ResponseEntity.status(401).body("Incorrect password.");
+            default:
+                return ResponseEntity.ok(result); // Could be user's name or welcome message
+        }
     }
+
+
+
 }

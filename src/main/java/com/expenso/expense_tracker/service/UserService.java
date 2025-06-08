@@ -23,13 +23,17 @@ public class UserService {
     public String loginUser(LoginDTO loginDTO) {
         Optional<User> userOpt = userRepository.findByEmail(loginDTO.getEmail());
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (user.getPassword().equals(loginDTO.getPassword())) {
-                return "Login successful!";
-            }
+        if (!userOpt.isPresent()) {
+            return "user_not_found";
         }
 
-        return "Invalid email or password!";
+        User user = userOpt.get();
+
+        if (!user.getPassword().equals(loginDTO.getPassword())) {
+            return "password_wrong";
+        }
+
+        return "Login successful!";
     }
+
 }
