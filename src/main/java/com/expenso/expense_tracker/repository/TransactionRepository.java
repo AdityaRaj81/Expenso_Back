@@ -1,6 +1,5 @@
 package com.expenso.expense_tracker.repository;
 
-
 import com.expenso.expense_tracker.model.Transaction;
 import com.expenso.expense_tracker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
