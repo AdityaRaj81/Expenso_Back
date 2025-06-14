@@ -25,7 +25,7 @@ public class DashboardService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        List<Transaction> transactions = transactionRepository.findByUser(user);
+        List<Transaction> transactions = transactionRepository.findByUserId(user.getId());
 
         double totalIncome = transactions.stream()
                 .filter(t -> t.getType().equalsIgnoreCase("income"))
