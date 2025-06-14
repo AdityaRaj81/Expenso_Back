@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -25,6 +26,8 @@ public class User {
     private String password;
 
     private String role = "USER";
+
+    private String themePreference = "light"; // Default
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }
