@@ -46,6 +46,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- JWT (JJWT) for token creation and parsing -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+
 		<!-- Spring Boot DevTools (Optional) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

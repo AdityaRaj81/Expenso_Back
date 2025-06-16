@@ -1,6 +1,5 @@
 package com.expenso.expense_tracker.controller;
 
-
 import com.expenso.expense_tracker.dto.DashboardResponse;
 import com.expenso.expense_tracker.service.DashboardService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,10 @@ public class DashboardController {
 
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboardData(Principal principal) {
+        if (principal == null) {
+            throw new RuntimeException("Unauthenticated access: Principal is null");
+        }
+
         UUID userId = UUID.fromString(principal.getName());
         DashboardResponse response = dashboardService.getDashboardData(userId);
         return ResponseEntity.ok(response);

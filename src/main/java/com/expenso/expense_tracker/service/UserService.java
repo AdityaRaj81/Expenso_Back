@@ -3,6 +3,7 @@ package com.expenso.expense_tracker.service;
 import com.expenso.expense_tracker.dto.LoginDTO;
 import com.expenso.expense_tracker.model.User;
 import com.expenso.expense_tracker.repository.UserRepository;
+import com.expenso.expense_tracker.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtService jwtService;
+
 
     // ✅ Create User
     public User createUser(User user) {
@@ -33,6 +37,8 @@ public class UserService {
             return "password_wrong";
         }
 
-        return "Login successful!";
+        // ✅ Return JWT instead of message
+        return jwtService.generateToken(user.getId());
+
     }
 }

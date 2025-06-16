@@ -21,4 +21,7 @@ public class AuthController {
         userRepository.save(user);
         return "User registered successfully!";
     }
+
+
+
 }
