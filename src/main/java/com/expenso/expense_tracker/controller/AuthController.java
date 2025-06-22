@@ -21,6 +21,9 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService; // ✅ moved above usage
+
     @PostMapping("/signup")
     public String signup(@RequestBody User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -44,27 +47,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid password"));
         }
 
-        // ✨ Generate JWT token (for now dummy)
-        String token = generateDummyJwtToken(user); // Replace this with real JWT later
+        // ✅ Real JWT token
+        String token = jwtService.generateToken(user.getId());
 
-        // ✅ Return token and user
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("user", user);
 
         return ResponseEntity.ok(response);
     }
-
-
-    @Autowired
-    private JwtService jwtService;
-
-    // ✅ Replace dummy token logic
-    private String generateDummyJwtToken(User user) {
-        return jwtService.generateToken(user.getId()); // UUID user ID
-    }
-
-
-
-
 }
