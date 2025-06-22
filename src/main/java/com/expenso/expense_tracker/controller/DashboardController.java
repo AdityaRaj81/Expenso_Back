@@ -18,12 +18,9 @@ public class DashboardController {
     private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<DashboardResponse> getDashboardData(@RequestHeader("Authorization") String token) {
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Unauthorized: Missing token");
-        }
-
-        UUID userId = jwtService.extractUserId(token);
+    public ResponseEntity<DashboardResponse> getDashboardData(
+            @RequestHeader("Authorization") String authHeader) {
+        UUID userId = jwtService.extractUserId(authHeader);
         DashboardResponse response = dashboardService.getDashboardData(userId);
         return ResponseEntity.ok(response);
     }
