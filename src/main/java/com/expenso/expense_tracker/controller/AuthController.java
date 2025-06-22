@@ -3,6 +3,7 @@ package com.expenso.expense_tracker.controller;
 import com.expenso.expense_tracker.dto.LoginRequest;
 import com.expenso.expense_tracker.model.User;
 import com.expenso.expense_tracker.repository.UserRepository;
+import com.expenso.expense_tracker.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,9 +55,13 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // Dummy token generator (replace with real JWT logic)
+
+    @Autowired
+    private JwtService jwtService;
+
+    // ✅ Replace dummy token logic
     private String generateDummyJwtToken(User user) {
-        return "dummy.jwt.token"; // 🛑 Replace this with actual JWT logic later
+        return jwtService.generateToken(user.getId()); // UUID user ID
     }
 
 
