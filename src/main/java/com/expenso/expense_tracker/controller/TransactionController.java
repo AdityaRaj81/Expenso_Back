@@ -21,7 +21,6 @@ public class TransactionController {
     @Autowired
     private JwtService jwtService;
 
-
     @PostMapping("/add")
     public ResponseEntity<Transaction> addTransaction(
             @RequestBody TransactionRequest request,
@@ -31,7 +30,4 @@ public class TransactionController {
         Transaction transaction = transactionService.addTransaction(request, userId);
         return ResponseEntity.ok(transaction);
     }
-
-
-
 }
