@@ -26,7 +26,11 @@ public class TransactionController {
             @RequestBody TransactionRequest request,
             @RequestHeader("Authorization") String authHeader) {
 
-        UUID userId = jwtService.extractUserId(authHeader); // ✅ Decode token
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid or missing Authorization header");
+        }
+
+        UUID userId = jwtService.extractUserId(authHeader);
         Transaction transaction = transactionService.addTransaction(request, userId);
         return ResponseEntity.ok(transaction);
     }
