@@ -47,9 +47,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid password"));
         }
 
-        // ✅ Real JWT token
+        // ✅ Generate real JWT token
         String token = jwtService.generateToken(user.getId());
 
+        // ✅ Return token and user
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("user", user);
