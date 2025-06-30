@@ -17,6 +17,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionController {
 
+    @GetMapping
+    public ResponseEntity<?> getAllTransactions(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid or missing Authorization header");
+        }
+
+        UUID userId = jwtService.extractUserId(authHeader);
+
+        return ResponseEntity.ok(transactionService.getAllTransactions(userId));
+    }
+
+
     private final TransactionService transactionService;
     @Autowired
     private JwtService jwtService;
