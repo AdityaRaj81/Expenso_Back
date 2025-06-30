@@ -18,17 +18,22 @@ import java.util.UUID;
 public class TransactionController {
 
     @GetMapping
-    public ResponseEntity<?> getAllTransactions(
-            @RequestHeader("Authorization") String authHeader
-    ) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Invalid or missing Authorization header");
-        }
-
-        UUID userId = jwtService.extractUserId(authHeader);
-
-        return ResponseEntity.ok(transactionService.getAllTransactions(userId));
+public ResponseEntity<?> getTransactions(
+        @RequestHeader("Authorization") String authHeader,
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "10") int limit
+) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
+        throw new RuntimeException("Invalid or missing Authorization header");
     }
+
+    UUID userId = jwtService.extractUserId(authHeader);
+
+    // ✅ Use your service to fetch paginated list
+    // Provide appropriate values for the two additional String parameters (e.g., sortBy and sortOrder)
+    return ResponseEntity.ok(transactionService.getPaginatedTransactions(userId, page, limit, null, null));
+}
+
 
 
     private final TransactionService transactionService;
