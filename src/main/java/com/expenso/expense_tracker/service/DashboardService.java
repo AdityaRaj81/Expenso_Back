@@ -1,18 +1,17 @@
 package com.expenso.expense_tracker.service;
 
-
-import com.expenso.expense_tracker.dto.DashboardResponse;
-import com.expenso.expense_tracker.dto.TransactionDTO;
+import com.expenso.expense_tracker.dto.*;
 import com.expenso.expense_tracker.model.Transaction;
 import com.expenso.expense_tracker.model.User;
 import com.expenso.expense_tracker.repository.UserRepository;
-
 import com.expenso.expense_tracker.repository.TransactionRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +53,63 @@ public class DashboardService {
                 ))
                 .collect(Collectors.toList());
 
-        return new DashboardResponse(totalIncome, totalExpenses, balance, recentTransactions);
+
+         // ✅ Generate chart data
+        List<MonthlyDataDTO> monthlyData = generateMonthlyData(transactions);
+        List<CategoryDataDTO> categoryData = generateCategoryData(transactions);
+
+        return new DashboardResponse(
+                totalIncome,
+                totalExpenses,
+                balance,
+                recentTransactions,
+                monthlyData,
+                categoryData
+        );
+    }
+
+    // ✅ Line Chart: Income vs Expenses per month (last 6 months)
+    private List<MonthlyDataDTO> generateMonthlyData(List<Transaction> transactions) {
+        LocalDate now = LocalDate.now();
+        List<MonthlyDataDTO> result = new ArrayList<>();
+
+        for (int i = 5; i >= 0; i--) {
+            LocalDate monthDate = now.minusMonths(i);
+            String monthName = monthDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+            double income = transactions.stream()
+                    .filter(t -> t.getType().equalsIgnoreCase("income") &&
+                            t.getDate().getMonthValue() == monthDate.getMonthValue() &&
+                            t.getDate().getYear() == monthDate.getYear())
+                    .mapToDouble(Transaction::getAmount)
+                    .sum();
+
+            double expense = transactions.stream()
+                    .filter(t -> t.getType().equalsIgnoreCase("expense") &&
+                            t.getDate().getMonthValue() == monthDate.getMonthValue() &&
+                            t.getDate().getYear() == monthDate.getYear())
+                    .mapToDouble(Transaction::getAmount)
+                    .sum();
+
+            result.add(new MonthlyDataDTO(monthName, income, expense, income - expense));
+        }
+
+        return result;
+    }
+
+    // ✅ Pie Chart: Expense breakdown by category (this month)
+    private List<CategoryDataDTO> generateCategoryData(List<Transaction> transactions) {
+        LocalDate now = LocalDate.now();
+        int thisMonth = now.getMonthValue();
+        int thisYear = now.getYear();
+
+        return transactions.stream()
+                .filter(t -> t.getType().equalsIgnoreCase("expense") &&
+                        t.getDate().getMonthValue() == thisMonth &&
+                        t.getDate().getYear() == thisYear)
+                .collect(Collectors.groupingBy(Transaction::getCategory, Collectors.summingDouble(Transaction::getAmount)))
+                .entrySet().stream()
+                .map(entry -> new CategoryDataDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }
