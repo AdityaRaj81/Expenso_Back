@@ -1,7 +1,5 @@
 package com.expenso.expense_tracker.model;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
