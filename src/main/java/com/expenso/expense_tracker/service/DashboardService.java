@@ -2,6 +2,7 @@ package com.expenso.expense_tracker.service;
 
 
 import com.expenso.expense_tracker.dto.DashboardResponse;
+import com.expenso.expense_tracker.dto.TransactionDTO;
 import com.expenso.expense_tracker.model.Transaction;
 import com.expenso.expense_tracker.model.User;
 import com.expenso.expense_tracker.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,19 @@ public class DashboardService {
 
         double balance = totalIncome - totalExpenses;
 
-        return new DashboardResponse(totalIncome, totalExpenses, balance);
+        List<TransactionDTO> recentTransactions = transactions.stream()
+                .sorted((t1, t2) -> t2.getDate().compareTo(t1.getDate()))
+                .limit(5)
+                .map(t -> new TransactionDTO(
+                        t.getId().toString(),
+                        t.getDescription(),
+                        t.getAmount(),
+                        t.getCategory(),
+                        t.getType(),
+                        t.getDate()
+                ))
+                .collect(Collectors.toList());
+
+        return new DashboardResponse(totalIncome, totalExpenses, balance, recentTransactions);
     }
 }
