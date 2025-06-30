@@ -9,4 +9,5 @@ public class MonthlyDataDTO {
     private String month;
     private double income;
     private double expenses;
+    private double balance;
 }
