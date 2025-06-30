@@ -44,12 +44,13 @@ public class JwtService {
     }
  
     public UUID extractUserId(String token) {
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
- 
-        Claims claims = parser.parseSignedClaims(token).getPayload();
- 
-        return UUID.fromString(claims.getSubject());
+    if (token == null || !token.startsWith("Bearer ") || token.length() <= 7) {
+        throw new RuntimeException("Invalid Authorization header");
     }
+    token = token.substring(7);  // 🛡️ safe now
+
+    Claims claims = parser.parseSignedClaims(token).getPayload();
+    return UUID.fromString(claims.getSubject());
+}
+
 }
