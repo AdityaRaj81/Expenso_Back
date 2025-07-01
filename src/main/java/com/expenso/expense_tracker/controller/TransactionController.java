@@ -7,9 +7,9 @@ import com.expenso.expense_tracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -17,41 +17,46 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionController {
 
-    @GetMapping
-public ResponseEntity<?> getTransactions(
-        @RequestHeader("Authorization") String authHeader,
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(defaultValue = "date") String sortBy,
-        @RequestParam(defaultValue = "desc") String sortOrder
-) {
-    if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
-        throw new RuntimeException("Invalid or missing Authorization header");
-    }
-
-    UUID userId = jwtService.extractUserId(authHeader);
-
-    // ✅ Use your service to fetch paginated list
-    // Provide appropriate values for the two additional String parameters (e.g., sortBy and sortOrder)
-     return ResponseEntity.ok(transactionService.getPaginatedTransactions(userId, page, limit, sortBy, sortOrder));
-}
-
-
     private final TransactionService transactionService;
+
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Transaction> addTransaction(
-            @RequestBody TransactionRequest request,
-            @RequestHeader("Authorization") String authHeader) {
+    @GetMapping
+    public ResponseEntity<?> getTransactions(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortOrder
+    ) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+            }
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Invalid or missing Authorization header");
+            UUID userId = jwtService.extractUserId(authHeader);
+            return ResponseEntity.ok(transactionService.getPaginatedTransactions(userId, page, limit, sortBy, sortOrder));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token. Please login again.");
         }
+    }
 
-        UUID userId = jwtService.extractUserId(authHeader);
-        Transaction transaction = transactionService.addTransaction(request, userId);
-        return ResponseEntity.ok(transaction);
+    @PostMapping("/add")
+    public ResponseEntity<?> addTransaction(
+            @RequestBody TransactionRequest request,
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+            }
+
+            UUID userId = jwtService.extractUserId(authHeader);
+            Transaction transaction = transactionService.addTransaction(request, userId);
+            return ResponseEntity.ok(transaction);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token. Please login again.");
+        }
     }
 }
