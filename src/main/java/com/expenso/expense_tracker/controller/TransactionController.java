@@ -21,7 +21,9 @@ public class TransactionController {
 public ResponseEntity<?> getTransactions(
         @RequestHeader("Authorization") String authHeader,
         @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int limit
+        @RequestParam(defaultValue = "10") int limit,
+        @RequestParam(defaultValue = "date") String sortBy,
+        @RequestParam(defaultValue = "desc") String sortOrder
 ) {
     if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
         throw new RuntimeException("Invalid or missing Authorization header");
@@ -31,9 +33,8 @@ public ResponseEntity<?> getTransactions(
 
     // ✅ Use your service to fetch paginated list
     // Provide appropriate values for the two additional String parameters (e.g., sortBy and sortOrder)
-    return ResponseEntity.ok(transactionService.getPaginatedTransactions(userId, page, limit, null, null));
+     return ResponseEntity.ok(transactionService.getPaginatedTransactions(userId, page, limit, sortBy, sortOrder));
 }
-
 
 
     private final TransactionService transactionService;
