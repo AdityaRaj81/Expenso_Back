@@ -38,8 +38,11 @@ public class TransactionService {
 
 
 
-
 public Map<String, Object> getPaginatedTransactions(UUID userId, int page, int limit, String sortBy, String sortOrder) {
+
+      sortBy = (sortBy == null || sortBy.trim().isEmpty()) ? "date" : sortBy;
+    sortOrder = (sortOrder == null || sortOrder.trim().isEmpty()) ? "desc" : sortOrder;
+
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder.toUpperCase()), sortBy);
     PageRequest pageable = PageRequest.of(page - 1, limit, sort);
 
@@ -68,9 +71,6 @@ public Map<String, Object> getPaginatedTransactions(UUID userId, int page, int l
     response.put("pagination", pagination);
     return response;
 }
-
-
-
  
     private final TransactionRepository transactionRepository;
 
