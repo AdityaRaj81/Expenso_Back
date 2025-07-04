@@ -72,7 +72,6 @@ public ResponseEntity<?> getFilteredTransactions(
     }
 }
 
-
     @PostMapping("/add")
     public ResponseEntity<?> addTransaction(
             @RequestBody TransactionRequest request,
@@ -90,8 +89,6 @@ public ResponseEntity<?> getFilteredTransactions(
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token. Please login again.");
         }
     }
-
-
 
     // UPDATE Transaction
 @PutMapping("/{id}")
@@ -113,7 +110,6 @@ public ResponseEntity<?> updateTransaction(
     }
 }
 
-
 // DELETE Transaction
 @DeleteMapping("/{id}")
 public ResponseEntity<?> deleteTransaction(
@@ -132,9 +128,4 @@ public ResponseEntity<?> deleteTransaction(
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete transaction");
     }
 }
-
-
-
-
-
 }
