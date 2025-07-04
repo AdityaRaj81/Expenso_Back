@@ -16,6 +16,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
 
     Page<Transaction> findByUserId(UUID userId, Pageable pageable);
 
-    // ✅ Add this below line
-    Optional<Transaction> findByIdAndUserId(UUID id, UUID userId);
+    Optional<Transaction> findByIdAndUserId(Long id, UUID userId);
+
 }

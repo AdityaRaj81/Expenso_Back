@@ -6,7 +6,7 @@ import com.expenso.expense_tracker.dto.TransactionRequest;
 import com.expenso.expense_tracker.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+// import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -143,7 +143,7 @@ public Map<String, Object> getFilteredTransactions(UUID userId, String search, S
     }
 
 
-    public Transaction updateTransaction(UUID id, TransactionRequest request, UUID userId) {
+    public Transaction updateTransaction(Long  id, TransactionRequest request, UUID userId) {
     Transaction existing = transactionRepository.findByIdAndUserId(id, userId)
         .orElseThrow(() -> new RuntimeException("Transaction not found or unauthorized"));
 
@@ -157,7 +157,7 @@ public Map<String, Object> getFilteredTransactions(UUID userId, String search, S
     return transactionRepository.save(existing);
 }
 
-public void deleteTransaction(UUID id, UUID userId) {
+public void deleteTransaction(Long  id, UUID userId) {
     Transaction transaction = transactionRepository.findByIdAndUserId(id, userId)
         .orElseThrow(() -> new RuntimeException("Transaction not found or unauthorized"));
     transactionRepository.delete(transaction);

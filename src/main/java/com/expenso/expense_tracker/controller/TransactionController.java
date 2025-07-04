@@ -96,7 +96,7 @@ public ResponseEntity<?> getFilteredTransactions(
     // UPDATE Transaction
 @PutMapping("/{id}")
 public ResponseEntity<?> updateTransaction(
-        @PathVariable UUID id,
+        @PathVariable Long  id,
         @RequestBody TransactionRequest request,
         @RequestHeader("Authorization") String authHeader
 ) {
@@ -117,7 +117,7 @@ public ResponseEntity<?> updateTransaction(
 // DELETE Transaction
 @DeleteMapping("/{id}")
 public ResponseEntity<?> deleteTransaction(
-        @PathVariable UUID id,
+        @PathVariable Long  id,
         @RequestHeader("Authorization") String authHeader
 ) {
     try {
