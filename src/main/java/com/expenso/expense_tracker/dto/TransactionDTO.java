@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TransactionDTO {
     private String id;
-    private String description;
+
     private double amount;
     private String category;
     private String type;

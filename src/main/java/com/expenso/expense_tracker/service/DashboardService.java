@@ -45,7 +45,7 @@ public class DashboardService {
                 .limit(5)
                 .map(t -> new TransactionDTO(
                         t.getId().toString(),
-                        t.getDescription(),
+
                         t.getAmount(),
                         t.getCategory(),
                         t.getType(),

@@ -25,7 +25,6 @@ public class TransactionService {
 
         return transactions.stream().map(t -> new TransactionDTO(
                 String.valueOf(t.getId()),
-                t.getDescription(),
                 t.getAmount(),
                 t.getCategory(),
                 t.getType(),
@@ -45,7 +44,6 @@ public class TransactionService {
         List<TransactionDTO> transactionDTOs = transactionPage.getContent().stream()
                 .map(t -> new TransactionDTO(
                         String.valueOf(t.getId()),
-                        t.getDescription(),
                         t.getAmount(),
                         t.getCategory(),
                         t.getType(),
@@ -87,10 +85,6 @@ public class TransactionService {
                 cb.equal(root.get("userId"), userId)
         );
 
-        if (search != null && !search.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("description")), "%" + search.toLowerCase() + "%"));
-        }
 
         if (type != null && !type.isBlank()) {
             spec = spec.and((root, query, cb) ->
@@ -133,7 +127,7 @@ public class TransactionService {
         List<TransactionDTO> transactionDTOs = transactionPage.getContent().stream()
                 .map(t -> new TransactionDTO(
                         String.valueOf(t.getId()),
-                        t.getDescription(),
+
                         t.getAmount(),
                         t.getCategory(),
                         t.getType(),
@@ -158,7 +152,7 @@ public class TransactionService {
                 .userId(userId)
                 .type(request.getType())
                 .amount(request.getAmount())
-                .description(request.getDescription())
+
                 .category(request.getCategory())
                 .date(request.getDate())
                 .notes(request.getNotes())
@@ -174,7 +168,7 @@ public class TransactionService {
         existing.setAmount(request.getAmount());
         existing.setCategory(request.getCategory());
         existing.setDate(request.getDate());
-        existing.setDescription(request.getDescription());
+
         existing.setNotes(request.getNotes());
         existing.setType(request.getType());
 

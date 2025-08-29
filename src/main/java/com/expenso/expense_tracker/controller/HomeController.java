@@ -22,4 +22,8 @@ public class HomeController {
 	public String version() {
 		return "Expense Tracker API Version 1.0";
 	}
+	@GetMapping("/api/dashboard")
+	public String dashboard() {
+		return "Expense Tracker API - Dashboard";
+	}
 }
