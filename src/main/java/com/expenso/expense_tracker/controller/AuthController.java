@@ -26,16 +26,21 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signup(@RequestBody User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+
+        // Always save emails in lowercase
+        String normalizedEmail = user.getEmail().toLowerCase();
+
+        if (userRepository.findByEmailIgnoreCase(normalizedEmail).isPresent()) {
             return "Email already registered!";
         }
+        user.setEmail(normalizedEmail);
         userRepository.save(user);
         return "User registered successfully!";
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
+        Optional<User> userOpt = userRepository.findByEmailIgnoreCase(loginRequest.getEmail());
 
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email"));
